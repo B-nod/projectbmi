@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+    {% include 'components/navbar.html' %}
+{% endblock navbar%}
+{% block content %}
+    <h1>Bmi List</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>BMI</th>
+        </tr>
+        {% for home in userlist %}
+        <tr>
+            <td>
+                <a href="{% url 'home:bmi_edit' home.id %}">{{ home.name }}</a>
+            </td>
+            <td>{{ home.weight }}</td>
+            <td>{{ home.height }}</td>
+            <td>{{ home.bmi }}</td>
+            <td>
+                <a class="btn btn-danger" href="{% url 'home:bmi_delete' home.id%}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
