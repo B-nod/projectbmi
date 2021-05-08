@@ -2,6 +2,9 @@ from django.shortcuts import render, reverse, Http404, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from home.models import BmiMeasurement
 from home.forms import BmiForm
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 # Create your views here.
 
 def bmi(request):
@@ -61,3 +64,15 @@ def bmi_delete(request, id):
     bmi = get_object_or_404(BmiMeasurement, id=id)
     bmi.delete()
     return HttpResponseRedirect(reverse("home:bmiuserlist"))
+
+def send_confirm_email(request):
+    subject = "Test Subject"
+    message = "Test Message"
+    from_email = "herotamang245@gmail.com"
+    recipient_list = [
+                    "binodtamang245@gmail.com",
+    ]
+    context = {"name":"binod"}
+    html_message = render_to_string("test.html", context)
+    res = send_mail(subject, message, from_email, recipient_list, html_message=html_message)
+    return HttpResponse(res)
