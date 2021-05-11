@@ -4,6 +4,7 @@ from home.models import BmiMeasurement
 from home.forms import BmiForm
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -16,6 +17,7 @@ def bmiuserlist(request):
     context = {"userlist": userlist}
     return render(request, "bmiuserlist.html", context)
 
+@login_required
 def bmiform(request):
      context = {}
      if request.POST:
@@ -66,13 +68,13 @@ def bmi_delete(request, id):
     return HttpResponseRedirect(reverse("home:bmiuserlist"))
 
 def send_confirm_email(request):
-    subject = "Test Subject"
-    message = "Test Message"
-    from_email = "herotamang245@gmail.com"
-    recipient_list = [
-                    "binodtamang245@gmail.com",
-    ]
-    context = {"name":"binod"}
-    html_message = render_to_string("test.html", context)
-    res = send_mail(subject, message, from_email, recipient_list, html_message=html_message)
-    return HttpResponse(res)
+        subject = "Test subject"
+        message = "Test message"
+        from_email = "herotamang245@gmail.com"
+        recipient_list = [
+                        "binodtamang245@gmail.com",
+        ]
+        context = {"name": "binod"}
+        html_message = render_to_string("test.html", context)
+        res = send_mail(subject, message, from_email, recipient_list, html_message=html_message)
+        return HttpResponse(res)
