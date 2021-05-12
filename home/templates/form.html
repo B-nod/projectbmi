@@ -30,7 +30,11 @@
             </div>
             {% endif %}
             <br>
-            <button type="submit" class="btn btn-success" value="save">Calculate BMI</button>
+            <button type="submit" class="btn btn-success">Calculate BMI</button>
+            <form method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success" value="save" name="save">Save</button>
+            </form>
           </form>
         </div>
         {% if bmi %}
@@ -47,7 +51,10 @@
           <p style="color: red;">{{ message }}</p>
           {% endif %}
         </div>
+        <br>
+        
         {% endif %}
+        
       </div>
     </div>
     {% endblock content%}

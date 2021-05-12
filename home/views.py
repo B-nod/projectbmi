@@ -12,6 +12,7 @@ def bmi(request):
     return render(request, "base.html")
 
 
+@login_required
 def bmiuserlist(request):
     userlist = BmiMeasurement.objects.all()
     context = {"userlist": userlist}
@@ -27,10 +28,15 @@ def bmiform(request):
 
         bmi = (weight/(height**2))
 
-        form = BmiForm(request.POST or None)
-        if form.is_valid():
-            # form.save()
-            BmiMeasurement.objects.create(name=name, height=height, weight=weight, bmi=bmi)
+        # form = BmiForm(request.POST or None)
+        # if form.is_valid():
+        #     mesurement = form.save(commit=False)
+        #     mesurement.user = request.user
+        #     BmiMeasurement.objects.create(name=name, height=height, weight=weight, bmi=bmi)
+        
+        
+
+            
 
    
         if bmi < 18:
@@ -44,8 +50,37 @@ def bmiform(request):
 
         context = {'bmi':bmi}
         context["message"] = message 
+        
+        form = BmiForm(request.POST or None)
+        if 'save' in request.POST:
+            if form.is_valid():
+                BmiMeasurement.objects.create(name=name, height=height, weight=weight, bmi=bmi)
+                return HttpResponseRedirect(reverse("home:bmiuserlist"))
+            return render(request, "form.html")
+
    
      return render(request, "form.html", context)
+
+def bmi_add(request):
+    form = BmiForm(request.POST or None)
+    # if 'save' in request.POST:
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse("home:bmiuserlist"))
+        context = {"form": form}
+        return render(request, "form.html", context)
+
+#     if 'save' in request.POST:
+#         bmi = BmiMeasurement.objects.get(id=id)
+#         form = BmiForm(request.Post or None, instance=bmi)
+#         # print(form)
+#         if form.is_valid():
+#         # #     print(form,cleaned_data)
+#             form.save()
+#             return HttpResponseRedirect(reverse("home:bmiuserlist"))
+#         context = {"form": form}
+#         return render(request, "form.html", context)
+
 
 
 def bmi_edit(request, id):
@@ -62,10 +97,12 @@ def bmi_edit(request, id):
     return render(request, "form.html", context)
     return HttpResponse(id)
 
+
 def bmi_delete(request, id):
     bmi = get_object_or_404(BmiMeasurement, id=id)
     bmi.delete()
     return HttpResponseRedirect(reverse("home:bmiuserlist"))
+
 
 def send_confirm_email(request):
         subject = "Test subject"

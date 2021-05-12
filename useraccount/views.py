@@ -32,6 +32,6 @@ def signup_view(request):
     form = CustomSignupForm(request.POST or None)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect(reverse("user:loginhtml"))
+        return HttpResponseRedirect(reverse("user:login"))
     context = {"form":form}
     return render(request,"register.html", context)
