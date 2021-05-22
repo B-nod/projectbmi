@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, reverse, Http404, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from home.models import BmiMeasurement
@@ -7,38 +8,29 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-
+@login_required
 def bmi(request):
     return render(request, "base.html")
 
 
 @login_required
 def bmiuserlist(request):
-    userlist = BmiMeasurement.objects.all()
+    userlist = BmiMeasurement.objects.filter(user=request.user)
+    # userlist = BmiMeasurement.objects.all()
     context = {"userlist": userlist}
     return render(request, "bmiuserlist.html", context)
 
 @login_required
 def bmiform(request):
-     context = {}
-     if request.POST:
-        name = request.POST.get("name")
+    form = BmiForm(request.POST or None)
+   
+    if 'calculate' in request.POST:
+        
         weight = float(request.POST.get("weight"))
         height = float(request.POST.get("height"))
 
         bmi = (weight/(height**2))
 
-        # form = BmiForm(request.POST or None)
-        # if form.is_valid():
-        #     mesurement = form.save(commit=False)
-        #     mesurement.user = request.user
-        #     BmiMeasurement.objects.create(name=name, height=height, weight=weight, bmi=bmi)
-        
-        
-
-            
-
-   
         if bmi < 18:
             message = "Underweight. Eat a variety of foods that give you the nutrition that your body needs."
         elif bmi > 18 and bmi < 24.9:
@@ -47,42 +39,75 @@ def bmiform(request):
             message = "Overweight. Avoid junk food and do exercise regularly."
         elif bmi > 30:
             message = "Obese. Consult with doctor, avoid junk food and increase physical activities."
-
-        context = {'bmi':bmi}
-        context["message"] = message 
         
-        form = BmiForm(request.POST or None)
-        if 'save' in request.POST:
-            if form.is_valid():
-                BmiMeasurement.objects.create(name=name, height=height, weight=weight, bmi=bmi)
-                return HttpResponseRedirect(reverse("home:bmiuserlist"))
-            return render(request, "form.html")
-
-   
-     return render(request, "form.html", context)
-
-def bmi_add(request):
-    form = BmiForm(request.POST or None)
-    # if 'save' in request.POST:
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse("home:bmiuserlist"))
-        context = {"form": form}
+    # if request.POST:
+        if form.is_valid():
+            bmis = form.save(commit=False)
+            bmis.user = request.user
+            form.save()
+        context = {'bmi':bmi, 'message':message}
         return render(request, "form.html", context)
+        # bmi = form.save(commit=False)
+        # bmi.user = request.user
+        # bmi.save()
+        # name = request.POST.get("name")
+        # weight = float(request.POST.get("weight"))
+        # height = float(request.POST.get("height"))
 
-#     if 'save' in request.POST:
-#         bmi = BmiMeasurement.objects.get(id=id)
-#         form = BmiForm(request.Post or None, instance=bmi)
-#         # print(form)
-#         if form.is_valid():
-#         # #     print(form,cleaned_data)
-#             form.save()
-#             return HttpResponseRedirect(reverse("home:bmiuserlist"))
-#         context = {"form": form}
-#         return render(request, "form.html", context)
+        # bmi = (weight/(height**2))
+
+        # if bmi < 18:
+        #     message = "Underweight. Eat a variety of foods that give you the nutrition that your body needs."
+        # elif bmi > 18 and bmi < 24.9:
+        #     message = "Congratulation! Your weight is normal.Keep it up."
+        # elif bmi > 25 and bmi < 29.9:
+        #     message = "Overweight. Avoid junk food and do exercise regularly."
+        # elif bmi > 30:
+        #     message = "Obese. Consult with doctor, avoid junk food and increase physical activities."
+    if 'save' in request.POST:
+          
+    #     bmis.bmi = bmi
+    #     print(bmis.bmi)
+    #     bmis.message = message
+        # bmis.save()
+        msg = BmiMeasurement.objects.filter(user=request.user).last()
+        weight = msg.weight
+        height = msg.height
+        bmi = (weight/(height**2))
+
+        if bmi < 18:
+            message = "Underweight. Eat a variety of foods that give you the nutrition that your body needs."
+        elif bmi > 18 and bmi < 24.9:
+            message = "Congratulation! Your weight is normal.Keep it up."
+        elif bmi > 25 and bmi < 29.9:
+            message = "Overweight. Avoid junk food and do exercise regularly."
+        elif bmi > 30:
+            message = "Obese. Consult with doctor, avoid junk food and increase physical activities."
+        msg.bmi = bmi
+        msg.message = message
+        msg.save()
+    
+        # print(msg)
+
+        
+        # bmis.save()
+        # BmiMeasurement.objects.create(height=height, weight=weight, bmi=bmi, message=message)
+        # # bmi.user = request.user
+        # # bmi.save() 
+        # bmi = form.save(commit=False)
+        # bmi.user = request.user
+        # bmi.save()
+    
+
+
+        
+
+    context = {"form":form}
+    return render(request, "form.html", context)
 
 
 
+@login_required
 def bmi_edit(request, id):
     # try:
     #     bmis = BmiMeasurement.objects.get(id=id)
@@ -91,27 +116,28 @@ def bmi_edit(request, id):
     bmi = get_object_or_404(BmiMeasurement, id=id)
     form = BmiForm(request.POST or None, instance=bmi)
     if form.is_valid():
+        print(form.cleaned_data)
         form.save()
         return HttpResponseRedirect(reverse("home:bmiuserlist"))
-    context = {"bmi": bmi}
+    context = {"form": form}
     return render(request, "form.html", context)
-    return HttpResponse(id)
 
-
+@login_required
 def bmi_delete(request, id):
     bmi = get_object_or_404(BmiMeasurement, id=id)
     bmi.delete()
     return HttpResponseRedirect(reverse("home:bmiuserlist"))
 
-
+@login_required
 def send_confirm_email(request):
-        subject = "Test subject"
-        message = "Test message"
-        from_email = "herotamang245@gmail.com"
-        recipient_list = [
-                        "binodtamang245@gmail.com",
+    send_bmi = BmiMeasurement.objects.filter(user=request.user).last().bmi
+    print(send_bmi)
+    send_mgs = BmiMeasurement.objects.filter(user=request.user).last().message
+    subject = "Test subject"
+    message = "Your Bmi is " + str(send_bmi)+"kg/m2 ." + str(send_mgs) 
+    from_email = "herotamang245@gmail.com"
+    recipient_list = [
+                    "binodtamang245@gmail.com",
         ]
-        context = {"name": "binod"}
-        html_message = render_to_string("test.html", context)
-        res = send_mail(subject, message, from_email, recipient_list, html_message=html_message)
-        return HttpResponse(res)
+    res = send_mail(subject, message, from_email, recipient_list)
+    return HttpResponse(res)

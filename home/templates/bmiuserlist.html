@@ -11,15 +11,21 @@
             <th>Weight</th>
             <th>Height</th>
             <th>BMI</th>
+            <th>Message</th>
+            <th>Created</th>
+            <th>Modified</th>
         </tr>
         {% for home in userlist %}
         <tr>
             <td>
-                <a href="{% url 'home:bmi_edit' home.id %}">{{ home.name }}</a>
+                <a href="{% url 'home:bmi_edit' home.id %}">{{ home.user }}</a>
             </td>
             <td>{{ home.weight }}</td>
             <td>{{ home.height }}</td>
             <td>{{ home.bmi }}</td>
+            <td>{{ home.message}}</td>
+            <td>{{ home.created }}</td>
+            <td>{{ home.modified }}</td>
             <td>
                 <a class="btn btn-danger" href="{% url 'home:bmi_delete' home.id%}">Delete</a>
             </td>

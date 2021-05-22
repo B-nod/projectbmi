@@ -1,12 +1,16 @@
 from django import forms
 # from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-# from useraccount.models import Profile
+from django.db.models import fields
+from useraccount.models import Profile
 from django.core.exceptions import ValidationError
 
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = "__all__"
 
 class CustomSignupForm(UserCreationForm):
-    email = forms.EmailField()
 
     # class Meta:
     #     model = User

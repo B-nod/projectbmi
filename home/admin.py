@@ -5,4 +5,4 @@ from home.models import BmiMeasurement
 
 @admin.register(BmiMeasurement)
 class BmiMeasurementAdmin(admin.ModelAdmin):
-    list_display = ("name", "weight", "height", "bmi", "message", )
+    list_display =  ("user", "weight", "height", "bmi", "message", "created", "modified", )
