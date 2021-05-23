@@ -8,16 +8,13 @@
         <a class="navbar-brand" href="#">Hidden brand</a>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'home:bmi' %}">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'user:profile' %}">Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'home:bmiform' %}">Bmi Calculator</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'home:bmiuserlist' %}">Bmi User List</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
           </li>
         </ul>
         <form class="d-flex" style="padding-right: 20px;">

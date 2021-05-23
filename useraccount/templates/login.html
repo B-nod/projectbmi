@@ -1,7 +1,7 @@
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="hidden" value="{{ next }}"/>
+    <input type="hidden" value="/user/profile/"/>
     <input type="submit" value="Log In" name="login"/>
 
     <button><a href="{% url 'user:register' %}">Register</a></button>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse, get_object_or_404, redirect
+from django.shortcuts import render, reverse, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
@@ -6,7 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from useraccount.forms import CustomSignupForm, ProfileForm
 from useraccount.models import Profile
-from useraccount.forms import ProfileForm
+from django.contrib.auth.forms import UserCreationForm
+
 
 # Create your views here.
 
@@ -31,27 +32,15 @@ class UserLogin(LoginView):
         context["next"] = self.request.GET.get("next")
         return context
     
-def signup_view(request):
-    form = CustomSignupForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse("user:login"))
-    context = {"form":form}
-    return render(request,"register.html", context)
-
-def logout_request(request):
-    logout(request)
-    return HttpResponseRedirect("/user/login/")
-
 def user_profile(request):
-    list = Profile.objects.filter(user=request.user)
-    context = {"list":list}
-    return render(request, "user_profile.html",context)
+    profilelist = Profile.objects.get(user=request.user)
+    context = {"profile": profilelist }
+    print(context)
+    print(request.user.email)
+    return render(request, "userprofile.html",context)
+    
 
-def my_profile(request):
-    pro = Profile.objects.filter(user=request.user)
-    context={"list":pro}
-    return render (request, "bmiuserlist.html", context)
+
 
 
 def profile_create(request):
@@ -63,11 +52,23 @@ def profile_create(request):
     return render(request, "profile_create.html", context)
 
 
-def profile_edit(request, id):
+def update_profile(request, id):
     profile = get_object_or_404(Profile, id=id)
     form = ProfileForm(request.POST or None, instance=profile)
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect(reverse("userapp:profile"))
+        return HttpResponseRedirect(reverse("user:profile"))
     context = {"form":form}
-    return render(request, "profile_create.html", context)
+    return render(request, "updateprofile.html", context)
+
+def signup_view(request):
+    form = CustomSignupForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse("user:login"))
+    context = {"form":form}
+    return render(request,"register.html", context)
+
+def logout_request(request):
+    logout(request)
+    return HttpResponseRedirect("/user/login/")

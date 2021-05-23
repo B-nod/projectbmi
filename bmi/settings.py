@@ -131,7 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "user:login"
 
-LOGIN_REDIRECT_URL = "home:bmi"
+LOGIN_REDIRECT_URL = "user:profile"
 
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = config("EMAIL_PORT")

@@ -1,10 +1,10 @@
 from django.urls import path
-from home.views import bmi, bmiuserlist, bmiform, bmi_edit, bmi_delete,  send_confirm_email
+from home.views import  bmiuserlist, bmiform, bmi_edit, bmi_delete,  send_confirm_email
 
 app_name = "home"
 
 urlpatterns = [
-    path('', bmi, name="bmi"),
+    # path('', bmi, name="bmi"),
     path('bmiuserlist/', bmiuserlist, name="bmiuserlist"),
     path('bmiform/', bmiform, name="bmiform"),
     path('bmi-edit/<int:id>/', bmi_edit, name="bmi_edit"),
