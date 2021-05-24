@@ -1,1 +1,8 @@
-<h1>email sent successfully to: {{ recepient }}</h1>
+{% extends 'base.html' %}
+
+{% block navbar %}
+    {% include 'components/navbar.html' %}
+{% endblock navbar%}
+{% block content%}
+   <h1 style="color: indigo;">Please cheack your email. Your message has been sent successfully.</h1>
+{% endblock content%}

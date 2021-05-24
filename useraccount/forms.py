@@ -23,13 +23,13 @@ class CustomSignupForm(UserCreationForm):
             ]
              
     
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields["password1"].help_text = "Your password must contain  10 characters."
-    #     self.fields["username"].widget.attrs['placeholder'] = "Username"
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["password1"].help_text = "Your password must contain  10 characters."
+        self.fields["username"].widget.attrs['placeholder'] = "Username"
 
-    # def clean_password1(self):
-    #     password = self.cleaned_data.get("password1")
-    #     if len(password) < 10:
-    #         raise ValidationError("Password must contain 10 character")
-    #     return password
+    def clean_password1(self):
+        password = self.cleaned_data.get("password1")
+        if len(password) < 10:
+            raise ValidationError("Password must contain 10 character")
+        return password

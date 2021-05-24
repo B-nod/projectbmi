@@ -7,15 +7,10 @@
 {% block content%}
     </header>
     <div class="container">
-        <div class="card-header">BMI Calculator</div>
-        <div class="card-body">
+        <div class="card-header" style="text-align: center; background-color: turquoise; color: rgb(100, 94, 94); font-size: 25px;">BMI Calculator</div>
+        <div class="card-body" style="padding-top: 50px;">
           <form method="POST" class="w-50 m-auto">
             {% csrf_token %}
-            <!-- {{ form.as_p }} -->
-            <!-- <div class="form-group">
-              <label> Name : </label>
-              <input type="name" name="name" id="name" class="form-control" placeholder="Enter your full name" required>
-            </div> -->
             <div class="form-group">
               <label> Weight : </label>
               <input type="number" name="weight" id="weight" class="form-control" min="0"  step="any" placeholder="Enter your weight in kg" required>
@@ -32,12 +27,12 @@
             {% endif %}
             <br>
           
-            <button type="submit" class="btn2 btn-success" name="calculate">Calculate</button>
+            <button type="submit" class="btn btn-success profile-button" name="calculate">Calculate</button>
           </form>
-          <form method="POST" class="w-50 m-auto">
+          <!-- <form method="POST" class="w-50 m-auto">
             {% csrf_token %}
             <button type="submit" class="btn1 btn-success" name="save">Save</button>
-          </form>
+          </form> -->
         </div>
         {% if bmi %}
         <div class="card-footer">

@@ -4,9 +4,9 @@
     {% include 'components/navbar.html' %}
 {% endblock navbar%}
 {% block content %}
-    <h1>Bmi List</h1>
+    <h1 style="text-align: center; color: indigo;">Bmi List</h1>
     <table class="table table-striped">
-        <tr>
+        <tr style="background-color: turquoise; color: rgb(94, 92, 92);">
             <th>Name</th>
             <th>Weight</th>
             <th>Height</th>
@@ -14,9 +14,10 @@
             <th>Message</th>
             <th>Created</th>
             <th>Modified</th>
+            <th>Action</th>
         </tr>
         {% for home in userlist %}
-        <tr>
+        <tr >
             <td>
                 <a href="{% url 'home:bmi_edit' home.id %}">{{ home.user }}</a>
             </td>

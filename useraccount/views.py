@@ -43,18 +43,18 @@ def user_profile(request):
 
 
 
-def profile_create(request):
-    form = ProfileForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse("user:profile"))
-    context = {"form":form}
-    return render(request, "profile_create.html", context)
+# def profile_create(request):
+#     form = ProfileForm(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#         return HttpResponseRedirect(reverse("user:profile"))
+#     context = {"form":form}
+#     return render(request, "profile_create.html", context)
 
 
 def update_profile(request, id):
     profile = get_object_or_404(Profile, id=id)
-    form = ProfileForm(request.POST or None, instance=profile)
+    form = ProfileForm(request.POST or None, request.FILES or None, instance=profile, )
     if form.is_valid():
         form.save()
         return HttpResponseRedirect(reverse("user:profile"))
